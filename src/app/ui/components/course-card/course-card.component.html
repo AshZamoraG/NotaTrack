@@ -1,3 +1,15 @@
-<p>
-  course-card works!
-</p>
+<ion-card [routerLink]="['/curso-detalle', curso.id]">
+  <ion-card-header>
+    <ion-card-title>{{ curso.nombre }}</ion-card-title>
+    <ion-card-subtitle>
+      {{ curso.codigo || 'Sin código' }} • {{ curso.creditos || 0 }} créditos
+    </ion-card-subtitle>
+  </ion-card-header>
+
+  <ion-card-content>
+    <p>Estado: <strong>{{ curso.estado || 'Al día' }}</strong></p>
+
+    <ion-progress-bar [value]="(curso.progreso ?? 0) / 100"></ion-progress-bar>
+    <p style="margin-top: 8px;">Progreso: {{ curso.progreso ?? 0 }}%</p>
+  </ion-card-content>
+</ion-card>
