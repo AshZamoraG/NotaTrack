@@ -1,15 +1,84 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>dashboard</ion-title>
+    <ion-title>NotaTrack</ion-title>
   </ion-toolbar>
 </ion-header>
-
-
 
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">dashboard</ion-title>
+      <ion-title size="large">NotaTrack</ion-title>
     </ion-toolbar>
   </ion-header>
+
+  <div class="ion-padding">
+    <!-- Tarjeta principal -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Hola 👋</ion-card-title>
+        <ion-card-subtitle>Tu control académico personal</ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content>
+        Lleva tus cursos, porcentajes y notas en un solo lugar.
+        La app te mostrará cuánto te falta para aprobar con <strong>7.0</strong>.
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Acciones rápidas -->
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12">
+          <ion-button expand="block" routerLink="/cursos">
+            Ver cursos
+          </ion-button>
+        </ion-col>
+
+        <ion-col size="12">
+          <ion-button expand="block" fill="outline" routerLink="/cuatrimestres">
+            Ver cuatrimestres
+          </ion-button>
+        </ion-col>
+
+        <ion-col size="12">
+          <ion-button expand="block" fill="clear" routerLink="/ajustes">
+            Ajustes
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <!-- Resumen “bonito” (mock por ahora) -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Resumen</ion-card-title>
+        <ion-card-subtitle>Vista rápida (demo)</ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content>
+        <ion-list lines="none">
+          <ion-item>
+            <ion-label>
+              <h2>Cursos activos</h2>
+              <p>3</p>
+            </ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>
+              <h2>Promedio actual</h2>
+              <p>8.2</p>
+            </ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>
+              <h2>En riesgo</h2>
+              <p>1 curso</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+  </div>
 </ion-content>

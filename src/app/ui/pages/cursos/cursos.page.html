@@ -1,13 +1,9 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>cursos</ion-title>
+    <ion-title>Cursos</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">cursos</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  <app-course-card *ngFor="let c of cursos" [curso]="c"></app-course-card>
 </ion-content>
