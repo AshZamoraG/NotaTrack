@@ -1,5 +1,30 @@
- CREATE TABLE IF NOT EXISTS perfil (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+import { Injectable } from "@angular/core";
+import { Capacitor } from '@capacitor/core' ;
+import { SQLiteConnection, CapacitorSQLite } from "@capacitor-community/sqlite";
+
+@Injectable({ providedIn : 'root' })
+export class DatabaseService{
+
+private sqlite = new SQLiteConnection(CapacitorSQLite);
+private dbName  = 'notatrack.bs';
+
+
+async init(){
+  const platform = Capacitor.getPlatform();
+
+  // En Android/IOS fuciona directo. En web requiere jeep-sqlite
+  if(platform === 'web'){
+      //aquí se pueden agregar initWebstore de ser necesarios
+  }
+
+  const db = await this.sqlite.createConnection(this.dbName, false, 'no-encryption',1,false);
+  await db.open();
+  await db.execute(`PRAGMA foreign_keys = ON;`);
+
+  //Aquí se ejecuta en schema
+  await db.execute(`
+    CREATE TABLE IF NOT EXISTS perfil (
+    id INTEGER PRIMARY KEY CHECK (id = 1),
     identificacion TEXT,
     nombre TEXT NOT NULL,
     universidad TEXT,
@@ -30,11 +55,21 @@
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     curso_id INTEGER NOT NULL,
     nombre TEXT NOT NULL,
-    tipo TEXT NOT NULL, -- PROYECTO, EXAMEN, TAREA, QUIZ, ETC....
+    tipo TEXT NOT NULL,
     porcentaje REAL NOT NULL,
-    nota REAL,-- NORA OPTENIDA AL FINAL....
+    nota REAL,
     FOREIGN KEY (curso_id) REFERENCES curso(id) ON DELETE CASCADE
   );
 
   CREATE INDEX IF NOT EXISTS idx_curso_cuatrimestre_id ON curso(cuatrimestre_id);
   CREATE INDEX IF NOT EXISTS idx_evaluacion_curso_id ON evaluacion(curso_id);
+`
+
+  );
+
+  return db;
+}
+
+
+
+}
