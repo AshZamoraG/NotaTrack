@@ -30,7 +30,7 @@ export const routes: Routes = [
   {
     path: 'curso-detalle/:id',
     loadComponent: () =>
-      import('./ui/components/curso-detalle/curso-detalle.page').then((m) => m.CursoDetallePage),
+      import('./ui/pages/curso-detalle/curso-detalle.page').then((m) => m.CursoDetallePage),
   },
 
   {
@@ -58,7 +58,8 @@ export const routes: Routes = [
       import('./ui/pages/ajustes/ajustes.page').then((m) => m.AjustesPage),
   },
 
-  { path: '**', redirectTo: 'dashboard' },  {
+  { path: '**', redirectTo: 'dashboard' },
+  {
     path: 'usuario',
     loadComponent: () => import('./ui/pages/usuario/usuario.page').then( m => m.UsuarioPage)
   },
