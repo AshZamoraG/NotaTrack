@@ -6,7 +6,7 @@ import { SQLiteConnection, CapacitorSQLite } from "@capacitor-community/sqlite";
 export class DatabaseService{
 
 private sqlite = new SQLiteConnection(CapacitorSQLite);
-private dbName  = 'notatrack.bs';
+private dbName  = 'notatrack.bd';
 
 
 async init(){
@@ -24,7 +24,7 @@ async init(){
   //Aquí se ejecuta en schema
   await db.execute(`
     CREATE TABLE IF NOT EXISTS perfil (
-    id INTEGER PRIMARY KEY CHECK (id = 1),
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     identificacion TEXT,
     nombre TEXT NOT NULL,
     universidad TEXT,

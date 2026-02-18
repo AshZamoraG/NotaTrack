@@ -1,23 +1,88 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
-import { CourseCardComponent, CursoMock } from '../../components/course-card/course-card.component';
+import {
+  IonContent, IonHeader, IonTitle, IonToolbar,
+  IonItem, IonLabel, IonInput, IonButton, IonList
+} from '@ionic/angular/standalone';
 
+import { CursoService } from 'src/app/core/services/curso.service';
+import { CuatrimestreService } from 'src/app/core/services/cuatrimestre.service';
 
 @Component({
   selector: 'app-cursos',
   templateUrl: './cursos.page.html',
   styleUrls: ['./cursos.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, CourseCardComponent]
+  imports: [
+    CommonModule, FormsModule,
+    IonContent, IonHeader, IonTitle, IonToolbar,
+    IonItem, IonLabel, IonInput, IonButton, IonList
+  ]
 })
-export class CursosPage {
+export class CursosPage implements OnInit {
+  cursos: any[] = [];
+  cuatrimestreActivo: any = null;
 
-  cursos: CursoMock[] = [
-    { id: 1, nombre: 'Matemáticas I', codigo: 'MAT101', creditos: 4, progreso: 45, estado: 'Al día' },
-    { id: 2, nombre: 'Programación II', codigo: 'PROG202', creditos: 3, progreso: 20, estado: 'En riesgo' },
-    { id: 3, nombre: 'Bases de Datos', codigo: 'BD150', creditos: 4, progreso: 80, estado: 'Aprobado' },
-  ];
+  // ✅ formulario real
+  nuevoCurso = {
+    nombre: '',
+    codigo: '',
+    creditos: 0,
+    nota_minima: 7
+  };
 
+  constructor(
+    private cursoSvc: CursoService,
+    private cuatriSvc: CuatrimestreService
+  ) {}
+
+  async ngOnInit() {
+    this.cuatrimestreActivo = await this.cuatriSvc.ensureActivoConPrueba();
+
+    // ✅ dato quemado de prueba (solo si no hay cursos)
+    await this.seedCursoSiNoHay();
+    await this.cargarCursos();
+  }
+
+  async cargarCursos() {
+    this.cursos = await this.cursoSvc.listByCuatrimestre(this.cuatrimestreActivo.id);
+  }
+
+  async guardarCurso() {
+    if (!this.nuevoCurso.nombre.trim()) {
+      alert('El nombre del curso es obligatorio.');
+      return;
+    }
+
+    await this.cursoSvc.create({
+      cuatrimestre_id: this.cuatrimestreActivo.id,
+      nombre: this.nuevoCurso.nombre.trim(),
+      codigo: this.nuevoCurso.codigo.trim(),
+      creditos: Number(this.nuevoCurso.creditos),
+      nota_minima: Number(this.nuevoCurso.nota_minima) || 7
+    });
+
+    // reset
+    this.nuevoCurso = { nombre: '', codigo: '', creditos: 0, nota_minima: 7 };
+    await this.cargarCursos();
+  }
+
+  async borrarCurso(id: number) {
+    await this.cursoSvc.remove(id);
+    await this.cargarCursos();
+  }
+
+  private async seedCursoSiNoHay() {
+    const lista = await this.cursoSvc.listByCuatrimestre(this.cuatrimestreActivo.id);
+    if (lista.length > 0) return;
+
+    await this.cursoSvc.create({
+      cuatrimestre_id: this.cuatrimestreActivo.id,
+      nombre: 'Programación II (prueba)',
+      codigo: 'PROG202',
+      creditos: 3,
+      nota_minima: 7
+    });
+  }
 }

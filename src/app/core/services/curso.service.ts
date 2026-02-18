@@ -1,32 +1,42 @@
 import { Injectable } from "@angular/core";
 import { DatabaseService } from "./database.service";
+import { Curso } from "../models/curso.model";
 
-
-@Injectable({ providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class CursoService {
-  constructor (private dbSvc: DatabaseService){}
+  constructor(private dbSvc: DatabaseService) {}
 
-  async create(nombre:string){
-      const db = await this.dbSvc.init();
-      await db.run('INSERT INTO CURSO (nombre) VALUES (?)',[nombre]);
-  }
-
-  async list(){
+  async create(curso: Curso) {
     const db = await this.dbSvc.init();
-    const res = await db.query('SELECT * FROM cuso ORDER BY id DESC ');
-    return res.values ??[];
+    await db.run(
+      `INSERT INTO curso (cuatrimestre_id, nombre, codigo, creditos, nota_minima)
+       VALUES (?, ?, ?, ?, ?)`,
+      [
+        curso.cuatrimestre_id,
+        curso.nombre,
+        curso.codigo ?? null,
+        curso.creditos ?? null,
+        curso.nota_minima ?? 7.0
+      ]
+    );
   }
 
-  async update (id: number, nombre: string){
+  async listByCuatrimestre(cuatrimestreId: number) {
     const db = await this.dbSvc.init();
-    await db.run('UPDATE curso SET nombre =? WHERE id =?',[nombre, id]);
+    const res = await db.query(
+      `SELECT * FROM curso WHERE cuatrimestre_id = ? ORDER BY id DESC`,
+      [cuatrimestreId]
+    );
+    return res.values ?? [];
   }
 
-  async remove(id:number){
+  async updateNombre(id: number, nombre: string) {
     const db = await this.dbSvc.init();
-    await db.run('DELETE FROM curso WHERE id = ?',[id]);
+    await db.run(`UPDATE curso SET nombre = ? WHERE id = ?`, [nombre, id]);
   }
 
-
-
+  async remove(id: number) {
+    const db = await this.dbSvc.init();
+    await db.run(`DELETE FROM curso WHERE id = ?`, [id]);
+  }
 }
