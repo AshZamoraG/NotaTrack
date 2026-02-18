@@ -19,20 +19,28 @@ import { CuatrimestreService } from 'src/app/core/services/cuatrimestre.service'
   ],
 })
 export class CuatrimestresPage implements OnInit {
-  activo: any = null;
-
-  nuevo = { anio: 2026, numero: 1 };
-
   constructor(private cuatriSvc: CuatrimestreService) {}
 
+  activo: any = null;
+  nuevo = {anio: 2026, numero: 1};
+
   async ngOnInit() {
-    // ✅ dato quemado: crea uno si no existe
-    this.activo = await this.cuatriSvc.ensureActivoConPrueba();
+    this.activo = await this.cuatriSvc.getActivo();
   }
 
   async crearYActivar() {
+
+    if(!this.nuevo.anio ||!this.nuevo.numero){
+      alert('Debe completar año y número');
+   }
+
     await this.cuatriSvc.create(this.nuevo.anio, this.nuevo.numero, 1);
     this.activo = await this.cuatriSvc.getActivo();
+    //Limpiar campso después de guardar
+    this.nuevo //= {anio: 2026, numero:1};
+
     alert('Cuatrimestre creado y activado ✅');
   }
+
+  
 }

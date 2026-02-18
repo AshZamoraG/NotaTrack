@@ -9,6 +9,7 @@ export class CuatrimestreService {
   async create(anio: number, numero: number, activo = 1) {
     const db = await this.dbSvc.init();
 
+    //Pasa el resto de cuatrimestes a inactivos
     if (activo === 1) {
       await db.run(`UPDATE cuatrimestre SET activo = 0`);
     }
@@ -25,12 +26,4 @@ export class CuatrimestreService {
     return (res.values ?? [])[0] ?? null;
   }
 
-  async ensureActivoConPrueba() {
-    const activo = await this.getActivo();
-    if (activo) return activo;
-
-    //  dato quemado de prueba
-    await this.create(2026, 1, 1);
-    return await this.getActivo();
-  }
 }

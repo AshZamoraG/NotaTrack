@@ -38,10 +38,8 @@ export class CursosPage implements OnInit {
   ) {}
 
   async ngOnInit() {
-    this.cuatrimestreActivo = await this.cuatriSvc.ensureActivoConPrueba();
+    this.cuatrimestreActivo = await this.cuatriSvc.getActivo();
 
-    // ✅ dato quemado de prueba (solo si no hay cursos)
-    await this.seedCursoSiNoHay();
     await this.cargarCursos();
   }
 
@@ -73,16 +71,5 @@ export class CursosPage implements OnInit {
     await this.cargarCursos();
   }
 
-  private async seedCursoSiNoHay() {
-    const lista = await this.cursoSvc.listByCuatrimestre(this.cuatrimestreActivo.id);
-    if (lista.length > 0) return;
-
-    await this.cursoSvc.create({
-      cuatrimestre_id: this.cuatrimestreActivo.id,
-      nombre: 'Programación II (prueba)',
-      codigo: 'PROG202',
-      creditos: 3,
-      nota_minima: 7
-    });
-  }
+  
 }
